@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <title>Click Button with Firebase!</title>
+
+
+    <!-- GET THE FIREBASE JAVASCRIPT CODE -->
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+
+  </head>
+
+  <body>
+
+
+
+    <!-- MESSAGE TO USER ON PAGE -->
+    <h1>Ouch! You've clicked me <span id="click-value"></span> times!</h1>
+
+    <!-- BUTTON TO SET DATA... UPDATE THE COUNTER -->
+    <button id="click-button">Click Me!!!!</button>
+
+    <!-- BRING IN JAVASCRIPT CODE TO HANDLE BLING OPERATORS -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+  <!-- ================================================================================== -->
+    <script>
+
+// SET UP PERSONAL DATABASE KEYS FOR ACCESS... DEFINES CONFIGURATION
+// MUST INITIALIZE THE DATABASE WITH CREDENTIALS
+
+var config = {
+    apiKey: "AIzaSyCAvVoNcHa_sb2lHjo6Emy2N6ftCDyXQfw",
+    authDomain: "tomproject-92e56.firebaseapp.com",
+    databaseURL: "https://tomproject-92e56.firebaseio.com",
+    storageBucket: "tomproject-92e56.appspot.com",
+    messagingSenderId: "529039500415"
+  };
+
+    firebase.initializeApp(config);  
+
+    // VARIABLES
+    // --------------------------------------------------------------------------------
+
+    var database = firebase.database();  // STORES THE DATABASE IN A VARIABLE
+    var clickCounter = 0;  // INITIALIZES THE COUNTER
+
+    // FUNCTIONS + EVENTS
+    // --------------------------------------------------------------------------------
+
+// USER ACTIVITY ON THE PAGE INCREMENTS THE COUNTER WHEN THE BUTTON IS CLICKED
+// AND UPDATES THE FIREBASE DATABASE OBJECT ON GOOGLE SERVER SIDE
+// KEY-VALUE PAIR IN DATABASE IS SHOWN HERE
+
+    $("#click-button").on("click", function() {
+      clickCounter++;
+      database.ref().set({
+        clickCount: clickCounter
+      });
+    });
+
+    // MAIN PROCESS + INITIAL CODE
+    // --------------------------------------------------------------------------------
+
+
+// WITH EACH DATABASE UPDATE WE RETRIEVE THE NEW VALUES
+// OPERATES IN REAL-TIME... CODE NAME IS snapshot
+// then on the screen we update the element with id='click-value'
+//
+// SHOWS LOCATION OF THE INFORMATION
+// val GIVES WHATEVER INFO AFTER THERE IS A DATABASE CHANGE
+// clickCounter is updated locally and is displayed
+// if there is an error, the console displays message
+
+    database.ref().on("value", function(snapshot) {
+      console.log(snapshot.val());
+      $("#click-value").html(snapshot.val().clickCount);
+      clickCounter = snapshot.val().clickCount;
+    }, function(errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+
+    </script>
+
+  </body>
+
+</html>
